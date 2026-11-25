@@ -340,14 +340,25 @@ export default function CameraCoach() {
 
           {cameraState === 'running' && (
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
-              <div className={`rounded-2xl p-4 ${frameStatus?.fingers ? 'bg-emerald-50' : 'bg-sky-50'}`}>
+              <div
+                className={`rounded-2xl p-4 ${
+                  !frameStatus?.fingers ? 'bg-sky-50' : matchingFingers === 4 ? 'bg-emerald-50' : 'bg-amber-50'
+                }`}
+                role="status"
+                aria-live="polite"
+              >
                 <p className="flex items-center gap-2 font-semibold text-navy">
-                  <Hand size={17} aria-hidden /> Hand pose
+                  {frameStatus?.fingers && matchingFingers === 4
+                    ? <Check size={17} aria-hidden />
+                    : <Hand size={17} aria-hidden />}
+                  Handshape feedback
                 </p>
                 <p className="mt-1 text-sm text-ink-600">
                   {!frameStatus?.fingers
                     ? 'Move one hand into view.'
-                    : `${matchingFingers} of 4 approximate finger positions match.`}
+                    : matchingFingers === 4
+                      ? 'Looks like a match! All 4 checked finger positions match this letter.'
+                      : `Not yet: ${matchingFingers} of 4 approximate finger positions match. Adjust your hand and try again.`}
                 </p>
               </div>
               <div className={`rounded-2xl p-4 ${frameStatus?.face ? 'bg-emerald-50' : 'bg-sky-50'}`}>
